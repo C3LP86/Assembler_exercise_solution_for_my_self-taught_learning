@@ -5,14 +5,14 @@ fileName="${1%%.*}" # remove .s extension
 # Assembler le fichier source
 nasm -f elf64 "${fileName}.s"
 
-# Vérifier si le deuxième argument est -d
+# Check if second argument is -d
 if [ "$2" == "-d" ]; then
-    # Lier avec le linker dynamique
+    # Link with the dynamic linker
     ld "${fileName}.o" -o "${fileName}" -lc --dynamic-linker /lib64/ld-linux-x86-64.so.2
 else
-    # Lier normalement
+    # Bind normally
     ld "${fileName}.o" -o "${fileName}"
 fi
 
-# Exécuter avec gdb si le deuxième argument est -g, sinon exécuter le fichier compilé
+# Run with gdb if the second argument is -g, otherwise run the compiled file
 [ "$2" == "-g" ] && gdb -q "${fileName}" || ./"${fileName}"
